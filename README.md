@@ -7,10 +7,10 @@ Crie uma aplicação do zero utilizando Express.
 Nessa aplicação configure as seguintes ferramentas:
 
 - [x] Sucrase + Nodemon;
-- [ ] ESLint + Prettier + EditorConfig;
-- [ ] Sequelize (Utilize PostgresSQL ou MySQL);
+- [x] ESLint + Prettier + EditorConfig;
+- [x] Sequelize (Utilize PostgresSQL ou MySQL);
 - [ ] Autenticação
-  - [ ] Permita que um usuário se autentique em sua aplicação utilizando e-mail e senha. 
+  - [ ] Permita que um usuário se autentique em sua aplicação utilizando e-mail e senha.
   - [ ] A autenticação deve ser feita utilizando JWT.
   - [ ] Realize a validação dos dados de entrada;
 - [ ] Cadastro e atualização de usuários
