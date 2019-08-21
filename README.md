@@ -14,9 +14,9 @@ Nessa aplicação configure as seguintes ferramentas:
   - [ ] A autenticação deve ser feita utilizando JWT.
   - [ ] Realize a validação dos dados de entrada;
 - [ ] Cadastro e atualização de usuários
-  - [ ] Permita que novos usuários se cadastrem em sua aplicação utilizando nome, e-mail e senha.
+  - [x] Permita que novos usuários se cadastrem em sua aplicação utilizando nome, e-mail e senha.
   - [ ] Para atualizar a senha, o usuário deve também enviar um campo de confirmação com a mesma senha.
-  - [ ] Criptografe a senha do usuário para segurança.
+  - [x] Criptografe a senha do usuário para segurança.
   - [ ] Realize a validação dos dados de entrada
 
 
