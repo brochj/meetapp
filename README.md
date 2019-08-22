@@ -10,8 +10,8 @@ Nessa aplicação configure as seguintes ferramentas:
 - [x] ESLint + Prettier + EditorConfig;
 - [x] Sequelize (Utilize PostgresSQL ou MySQL);
 - [ ] Autenticação
-  - [ ] Permita que um usuário se autentique em sua aplicação utilizando e-mail e senha.
-  - [ ] A autenticação deve ser feita utilizando JWT.
+  - [x] Permita que um usuário se autentique em sua aplicação utilizando e-mail e senha.
+  - [x] A autenticação deve ser feita utilizando JWT.
   - [ ] Realize a validação dos dados de entrada;
 - [ ] Cadastro e atualização de usuários
   - [x] Permita que novos usuários se cadastrem em sua aplicação utilizando nome, e-mail e senha.
