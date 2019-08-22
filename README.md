@@ -15,7 +15,7 @@ Nessa aplicação configure as seguintes ferramentas:
   - [ ] Realize a validação dos dados de entrada;
 - [ ] Cadastro e atualização de usuários
   - [x] Permita que novos usuários se cadastrem em sua aplicação utilizando nome, e-mail e senha.
-  - [ ] Para atualizar a senha, o usuário deve também enviar um campo de confirmação com a mesma senha.
+  - [x] Para atualizar a senha, o usuário deve também enviar um campo de confirmação com a mesma senha.
   - [x] Criptografe a senha do usuário para segurança.
   - [ ] Realize a validação dos dados de entrada
 

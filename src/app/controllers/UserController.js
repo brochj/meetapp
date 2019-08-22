@@ -39,18 +39,22 @@ class UserController {
 
     const user = await User.findByPk(req.userId); // user contem os dados do DB
 
-    // if (email !== user.email) {
-    //   const userExists = await User.findOne({ where: { email } });
+    // Verificando se o usario quis trocar de email.
+    if (email !== user.email) {
+      const userExists = await User.findOne({ where: { email } });
 
-    //   if (userExists) {
-    //     return res.status(400).json({ error: 'User already exists' });
-    //   }
-    // }
+      if (userExists) {
+        return res.status(400).json({ error: 'User already exists' });
+      }
+    }
 
-    // if (oldPassword && !(await user.checkPassword(oldPassword))) {
-    //   return res.status(401).json({ error: 'Password does not match' });
-    // }
+    // Verificando se o usario quis trocar de senha.
+    // Verificando se a senha "antiga" confere com a senha salva no DB
+    if (oldPassword && !(await user.checkPassword(oldPassword))) {
+      return res.status(401).json({ error: 'Password does not match' });
+    }
 
+    // Se passou pelas validações acima, pode-se atualizar o usuário
     const { id, name, provider } = await user.update(req.body);
 
     return res.json({ id, name, email, provider });
