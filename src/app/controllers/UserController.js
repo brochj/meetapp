@@ -1,8 +1,23 @@
-// import * as Yup from 'yup';
+import * as Yup from 'yup';
 import User from '../models/User';
 
 class UserController {
   async store(req, res) {
+    // validacoes dos dados de entrada
+    const schema = Yup.object().shape({
+      name: Yup.string().required('name field is required'),
+      email: Yup.string()
+        .email('invalid email')
+        .required('email field is required'),
+      password: Yup.string()
+        .min(6, 'Passwords must be at least 6 characters long')
+        .required('password field is required'),
+    });
+
+    schema
+      .validate(req.body)
+      .catch(e => res.status(400).json({ error: e.message }));
+
     // Verificando se ja existe usuário com email cadastrado
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
@@ -16,24 +31,32 @@ class UserController {
   }
 
   async update(req, res) {
-    // validacoes
-    // const schema = Yup.object().shape({
-    //   name: Yup.string(),
-    //   email: Yup.string().email(),
-    //   oldPassword: Yup.string().min(6),
-    //   password: Yup.string()
-    //     .min(6)
-    //     .when('oldPassword', (oldPassword, field) =>
-    //       oldPassword ? field.required() : field
-    //     ),
-    //   confirmPassword: Yup.string().when('password', (password, field) =>
-    //     password ? field.required().oneOf([Yup.ref('password')]) : field
-    //   ),
-    // });
+    // validacão de update de usuário
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      email: Yup.string().email('invalid email'),
+      oldPassword: Yup.string().min(
+        6,
+        'Passwords must be at least 6 characters long'
+      ),
+      password: Yup.string()
+        .min(6, 'Passwords must be at least 6 characters long')
+        .when('oldPassword', (oldPassword, field) =>
+          oldPassword ? field.required() : field
+        ),
+      confirmPassword: Yup.string().when('password', (password, field) =>
+        password
+          ? field
+              .required()
+              .oneOf([Yup.ref('password')], 'confirm password does not match')
+          : field
+      ),
+    });
+    // TODO evitar update de senha atual, exempl oldpassword = password
 
-    // if (!(await schema.isValid(req.body))) {
-    //   return res.status(400).json({ error: 'Validations fails' });
-    // }
+    schema
+      .validate(req.body)
+      .catch(e => res.status(400).json({ error: e.message }));
 
     const { email, oldPassword } = req.body;
 
