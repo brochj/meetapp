@@ -30,13 +30,13 @@ Nessa aplicação configure as seguintes ferramentas:
 
 #### Gerenciamento de arquivos
 
-- [ ] Crie uma rota para upload de arquivos que cadastra em uma tabela o caminho e nome do arquivo e retorna todos dados do arquivo cadastrado.
+- [x] Crie uma rota para upload de arquivos que cadastra em uma tabela o caminho e nome do arquivo e retorna todos dados do arquivo cadastrado.
 
 #### Gerenciamento de meetups
 
-- [ ] O usuário pode cadastrar meetups na plataforma com título do meetup, descrição, localização, data e hora e imagem (banner). Todos campos são obrigatórios. Adicione também um campo user_id que armazena o ID do usuário que organiza o evento.
+- [x] O usuário pode cadastrar meetups na plataforma com título do meetup, descrição, localização, data e hora e imagem (banner). Todos campos são obrigatórios. Adicione também um campo user_id que armazena o ID do usuário que organiza o evento.
 
-- [ ] Não deve ser possível cadastrar meetups com datas que já passaram.
+- [x] Não deve ser possível cadastrar meetups com datas que já passaram.
 
 - [ ] O usuário também deve poder editar todos dados de meetups que ainda não aconteceram e que ele é organizador.
 
