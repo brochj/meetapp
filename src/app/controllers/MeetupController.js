@@ -35,19 +35,19 @@ class MeetupController {
     if (meetup.user_id !== req.userId) {
       return res
         .status(401)
-        .json({ error: 'You do not have permission to change this meetup' });
+        .json({ error: 'You do not have permission to change this meetup.' });
     }
 
     // Checks if the date has passed
     if (isBefore(parseISO(req.body.date), new Date())) {
-      return res.status(400).json({ error: 'Meetup date invalid' });
+      return res.status(400).json({ error: 'Meetup date invalid.' });
     }
 
     // Checks if the meeting has happened
     if (meetup.past) {
       return res
         .status(400)
-        .json({ error: "Can't change a meeting that happened" });
+        .json({ error: "Can't change a meeting that happened." });
     }
 
     await meetup.update(req.body);
@@ -87,6 +87,26 @@ class MeetupController {
     });
 
     return res.json(meetup);
+  }
+
+  async delete(req, res) {
+    const meetup = await Meetup.findByPk(req.params.id);
+
+    // Checks if the logged user is the meetup creator
+    if (meetup.user_id !== req.userId) {
+      return res.status(401).json({ error: 'Not authorized.' });
+    }
+
+    // Checks if the meeting has happened
+    if (meetup.past) {
+      return res
+        .status(400)
+        .json({ error: "Can't delete a meeting that happened." });
+    }
+
+    await meetup.destroy();
+
+    return res.send();
   }
 }
 

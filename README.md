@@ -40,7 +40,7 @@ Nessa aplicação configure as seguintes ferramentas:
 
 - [x] O usuário também deve poder editar todos dados de meetups que ainda não aconteceram e que ele é organizador.
 
-- [ ] Crie uma rota para listar os meetups que são organizados pelo usuário logado.
+- [x] Crie uma rota para listar os meetups que são organizados pelo usuário logado.
 
 - [ ] O usuário deve poder cancelar meetups organizados por ele e que ainda não aconteceram. O cancelamento deve deletar o meetup da base de dados.
 
