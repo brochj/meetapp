@@ -1,8 +1,20 @@
 import { isBefore, parseISO } from 'date-fns';
 import * as Yup from 'yup';
 import Meetup from '../models/Meetup';
+import User from '../models/User';
 
 class MeetupController {
+  async index(req, res) {
+    const user_id = req.userId;
+
+    const meetups = await Meetup.findAll({
+      where: { user_id },
+      include: [User],
+    });
+
+    return res.json(meetups);
+  }
+
   async update(req, res) {
     // data validation
     const schema = Yup.object().shape({

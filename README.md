@@ -38,7 +38,7 @@ Nessa aplicação configure as seguintes ferramentas:
 
 - [x] Não deve ser possível cadastrar meetups com datas que já passaram.
 
-- [ ] O usuário também deve poder editar todos dados de meetups que ainda não aconteceram e que ele é organizador.
+- [x] O usuário também deve poder editar todos dados de meetups que ainda não aconteceram e que ele é organizador.
 
 - [ ] Crie uma rota para listar os meetups que são organizados pelo usuário logado.
 
