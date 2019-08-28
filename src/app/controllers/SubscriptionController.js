@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 import User from '../models/User';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
@@ -65,8 +67,16 @@ class SubscriptionController {
 
     await Mail.sendMail({
       to: `${meetup.user.name} <${meetup.user.email}>`,
-      subject: 'Nova inscrição',
-      text: 'Houve uma nova inscrição',
+      subject: `Nova inscrição em ${meetup.title}`,
+      template: 'subscription',
+      context: {
+        meetupCreator: meetup.user.name,
+        meetup_title: meetup.title,
+        user: user.name,
+        date: format(meetup.date, "dd 'de' MMMM' de ' yyyy', às' H:mm'h'", {
+          locale: pt,
+        }),
+      },
     });
 
     return res.json(meetup.user.email);
