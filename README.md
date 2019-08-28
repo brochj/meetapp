@@ -54,7 +54,7 @@ Nessa aplicação configure as seguintes ferramentas:
 
 - [x] O usuário não pode se inscrever em dois meetups que acontecem no mesmo horário.
 
-- [ ] Sempre que um usuário se inscrever no meetup, envie um e-mail ao organizador contendo os dados relacionados ao usuário inscrito. O template do e-mail fica por sua conta :)
+- [x] Sempre que um usuário se inscrever no meetup, envie um e-mail ao organizador contendo os dados relacionados ao usuário inscrito. O template do e-mail fica por sua conta :)
 
 #### Listagem de meetups
 
