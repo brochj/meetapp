@@ -2,6 +2,8 @@ import User from '../models/User';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
 
+import Mail from '../../lib/Mail';
+
 class SubscriptionController {
   async index(req, res) {
     return res.json({ ok: true });
@@ -9,7 +11,13 @@ class SubscriptionController {
 
   async store(req, res) {
     const meetup = await Meetup.findByPk(req.params.meetupId, {
-      include: [User],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name', 'email'],
+        },
+      ],
     });
     const user = await User.findByPk(req.userId);
     // TODO verificar se o meetup existe
@@ -50,12 +58,18 @@ class SubscriptionController {
         .json({ error: "Can't subscribe to two meetups at the same time" });
     }
 
-    const subscription = await Subscription.create({
-      user_id: user.id,
-      meetup_id: meetup.id,
+    // const subscription = await Subscription.create({
+    //   user_id: user.id,
+    //   meetup_id: meetup.id,
+    // });
+
+    await Mail.sendMail({
+      to: `${meetup.user.name} <${meetup.user.email}>`,
+      subject: 'Nova inscrição',
+      text: 'Houve uma nova inscrição',
     });
 
-    return res.json(subscription);
+    return res.json(meetup.user.email);
   }
 }
 
