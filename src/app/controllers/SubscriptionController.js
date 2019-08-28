@@ -1,10 +1,9 @@
-import { format } from 'date-fns';
-import pt from 'date-fns/locale/pt';
 import User from '../models/User';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
 
-import Mail from '../../lib/Mail';
+import SubscriptionMail from '../jobs/SubscriptionMail';
+import Queue from '../../lib/Queue';
 
 class SubscriptionController {
   async index(req, res) {
@@ -16,7 +15,6 @@ class SubscriptionController {
       include: [
         {
           model: User,
-          as: 'user',
           attributes: ['name', 'email'],
         },
       ],
@@ -60,26 +58,14 @@ class SubscriptionController {
         .json({ error: "Can't subscribe to two meetups at the same time" });
     }
 
-    // const subscription = await Subscription.create({
-    //   user_id: user.id,
-    //   meetup_id: meetup.id,
-    // });
-
-    await Mail.sendMail({
-      to: `${meetup.user.name} <${meetup.user.email}>`,
-      subject: `Nova inscrição em ${meetup.title}`,
-      template: 'subscription',
-      context: {
-        meetupCreator: meetup.user.name,
-        meetup_title: meetup.title,
-        user: user.name,
-        date: format(meetup.date, "dd 'de' MMMM' de ' yyyy', às' H:mm'h'", {
-          locale: pt,
-        }),
-      },
+    const subscription = await Subscription.create({
+      user_id: user.id,
+      meetup_id: meetup.id,
     });
 
-    return res.json(meetup.user.email);
+    await Queue.add(SubscriptionMail.key, { meetup, user });
+
+    return res.json(subscription);
   }
 }
 
