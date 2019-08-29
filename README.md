@@ -76,6 +76,3 @@ http://localhost:3333/meetups?date=2019-07-01&page=2
 
 - [x] Liste apenas meetups que ainda não passaram e ordene meetups mais próximos como primeiros da lista.
 
-## Entrega
-
-Esse desafio **não precisa ser entregue** e não receberá correção, mas você pode ver o resultado do código do desafio aqui: https://github.com/Rocketseat/bootcamp-gostack-desafio-03
