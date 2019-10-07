@@ -14,26 +14,24 @@ import {
 import Background from '~/components/Background';
 import Subscription from '~/components/Subscription';
 
-import { Container, List, Title, Fim } from './styles';
+import { Container, List, Fim } from './styles';
 
 export default function Subscriptions() {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const subscriptions = useSelector(state => state.meetup.subscriptions);
-  const [meetups, setMeetups] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [date, setDate] = useState(new Date());
   const [page, setPage] = useState(1);
   const [initialLoading, setInitialLoading] = useState(false);
   const [canLoadMore, setCanLoadMore] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setMeetups([]);
     dispatch(getSubscriptionRequest());
     async function loadSubscriptions() {
       setInitialLoading(true);
       const response = await api.get('subscriptions');
-      setMeetups(response.data);
       if (response.data.length === 0) setInitialLoading(false);
 
       setCanLoadMore(true);
@@ -44,14 +42,16 @@ export default function Subscriptions() {
 
   async function handleCancel(id) {
     try {
+      setLoading(true);
       await api.delete(`subscriptions/${id}`);
-      ToastAndroid.show('Você se desiscreveu do meetup', ToastAndroid.SHORT);
+      ToastAndroid.show('Você se desinscreveu do meetup', ToastAndroid.SHORT);
     } catch (err) {
       Alert.alert(
         'Erro',
-        `Não foi possível se desinscrever, tente novamente mais tarde${err}`
+        `Não foi possível se desinscrever, tente novamente mais tarde`
       );
     }
+    setLoading(false);
     dispatch(getSubscriptionRequest());
   }
 
@@ -88,17 +88,16 @@ export default function Subscriptions() {
           onEndReachedThreshold={0.15}
           onEndReached={() => handleOnEndReached()}
           ListFooterComponent={
-            canLoadMore ? (
-              initialLoading && <ActivityIndicator color="#f94d6a" />
-            ) : (
-              <Fim>Acabou suas inscrições</Fim>
-            )
+            canLoadMore
+              ? initialLoading && <ActivityIndicator color="#f94d6a" />
+              : subscriptions.length > 0 && <Fim>Fim</Fim>
           }
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
             <Subscription
               onCancel={() => handleCancel(item.id)}
               data={item.Meetup}
+              loading={loading}
             />
           )}
         />

@@ -16,7 +16,7 @@ import {
   Info,
 } from './styles';
 
-export default function Subscription({ data, onCancel }) {
+export default function Subscription({ data, onCancel, loading }) {
   const dateParsed = useMemo(() => {
     return formatRelative(parseISO(data.date), new Date(), {
       locale: pt,
@@ -48,7 +48,11 @@ export default function Subscription({ data, onCancel }) {
           <User>{data.User.name}</User>
         </Row>
 
-        {!data.past && <Button onPress={onCancel}>Cancelar Inscrição</Button>}
+        {!data.past && (
+          <Button loading={loading} onPress={onCancel}>
+            Cancelar Inscrição
+          </Button>
+        )}
       </Info>
     </Container>
   );

@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
 import { format, subDays, addDays } from 'date-fns';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useIsFocused } from 'react-navigation-hooks';
 // import { utcToZonedTime } from 'date-fns-tz';
 import pt from 'date-fns/locale/pt';
 // import Intl from 'react-native-intl';
@@ -16,6 +17,8 @@ import { Container, List, DateInfo, Header, ChevronIcon, Fim } from './styles';
 
 export default function Meetups() {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const subscriptions = useSelector(state => state.meetup.subscriptions);
   const [meetups, setMeetups] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -35,14 +38,26 @@ export default function Meetups() {
       const response = await api.get('meetups', {
         params: { date, page },
       });
-      setMeetups(response.data);
       if (response.data.length === 0) setInitialLoading(false);
 
+      setMeetups(
+        response.data.map(meetup => {
+          const isSubscribed = subscriptions.find(
+            sub => sub.Meetup.id === meetup.id
+          );
+          if (isSubscribed) {
+            return { ...meetup, subscribed: true };
+          }
+          return { ...meetup };
+        })
+      );
+      // console.tron.log(isSubscribed);
+      // setMeetups(response.data);
+
       setCanLoadMore(true);
-      // setInitialLoading(false);
     }
     loadMeetups();
-  }, [date]); // eslint-disable-line
+  }, [date, isFocused]); // eslint-disable-line
 
   async function handleSubscription(id) {
     try {
@@ -58,10 +73,7 @@ export default function Meetups() {
         );
       }
     } catch (err) {
-      Alert.alert(
-        'Erro',
-        `Não foi possível se inscrever, tente novamente mais tarde${err}`
-      );
+      Alert.alert('Error', `${err.response.data.error}`);
     }
   }
 
