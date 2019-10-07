@@ -7,6 +7,7 @@ import { useIsFocused } from 'react-navigation-hooks';
 import pt from 'date-fns/locale/pt';
 // import Intl from 'react-native-intl';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import appConfig from '~/config/appConfig';
 
 import api from '~/services/api';
 
@@ -46,9 +47,22 @@ export default function Meetups() {
             sub => sub.Meetup.id === meetup.id
           );
           if (isSubscribed) {
-            return { ...meetup, subscribed: true };
+            return {
+              ...meetup,
+              subscribed: true,
+              File: {
+                ...meetup.File,
+                url: meetup.File.url.replace('localhost', appConfig.imagesHost),
+              },
+            };
           }
-          return { ...meetup };
+          return {
+            ...meetup,
+            File: {
+              ...meetup.File,
+              url: meetup.File.url.replace('localhost', appConfig.imagesHost),
+            },
+          };
         })
       );
       setCanLoadMore(true);
@@ -63,9 +77,26 @@ export default function Meetups() {
         setMeetups(
           meetups.map(meetup => {
             if (meetup.id === response.data.meetup_id) {
-              return { ...meetup, subscribed: true };
+              return {
+                ...meetup,
+                subscribed: true,
+                File: {
+                  ...meetup.File,
+                  url: meetup.File.url.replace(
+                    'localhost',
+                    appConfig.imagesHost
+                  ),
+                },
+              };
             }
-            return { ...meetup };
+
+            return {
+              ...meetup,
+              File: {
+                ...meetup.File,
+                url: meetup.File.url.replace('localhost', appConfig.imagesHost),
+              },
+            };
           })
         );
       }
@@ -73,6 +104,17 @@ export default function Meetups() {
       Alert.alert('Error', `${err.response.data.error}`);
     }
   }
+
+  // const hostChanged = response.data.map(sub => ({
+  //   ...sub,
+  //   Meetup: {
+  //     ...sub.Meetup,
+  //     File: {
+  //       ...sub.Meetup.File,
+  //       url: sub.Meetup.File.url.replace('localhost', appConfig.imagesHost),
+  //     },
+  //   },
+  // }));
 
   async function handleOnEndReached() {
     if (canLoadMore) {

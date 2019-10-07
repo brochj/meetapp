@@ -4,6 +4,7 @@ export const serverPort = '3333';
 const appConfig = {
   reactotronHost: serverIP, // configure({ host: appConfig.reactotronHost })
   apiBaseURL: `http://${serverIP}:${serverPort}`,
+  imagesHost: serverIP, // default localhost
 };
 
 export default appConfig;

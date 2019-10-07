@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { parseISO, formatRelative } from 'date-fns';
 import pt from 'date-fns/locale/pt';
-import { TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Button from '~/components/Button';
 
@@ -26,16 +25,10 @@ export default function Subscription({ data, onCancel, loading }) {
 
   return (
     <Container past={data.past}>
-      <Banner
-        source={{
-          uri: 'https://api.adorable.io/avatars/85/abott@adorable.io.png',
-        }}
-      />
       <Banner source={{ uri: data.File.url }} />
 
       <Info>
-        <Title>{data.id}</Title>
-        <Title>{data.File.url}</Title>
+        <Title>{data.title}</Title>
         <Row>
           <Icon name="event" size={20} color="rgba(0,0,0,0.4)" />
           <Time>{dateParsed}s</Time>

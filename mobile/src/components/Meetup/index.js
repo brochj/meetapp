@@ -26,12 +26,7 @@ export default function Meetup({ data, onSubscription, onCancel, subscribed }) {
 
   return (
     <Container past={data.past}>
-      <Banner
-        source={{
-          uri: 'https://api.adorable.io/avatars/85/abott@adorable.io.png',
-        }}
-      />
-      {/* <Banner source={{ uri: data.File.url }} /> */}
+      <Banner source={{ uri: data.File.url }} />
 
       <Info>
         <Title>{data.id}</Title>
