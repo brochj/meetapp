@@ -16,7 +16,12 @@ import {
   Info,
 } from './styles';
 
-export default function Appointment({ data, onSubscription }) {
+export default function Appointment({
+  data,
+  onSubscription,
+  onCancel,
+  subscribed,
+}) {
   const dateParsed = useMemo(() => {
     return formatRelative(parseISO(data.date), new Date(), {
       locale: pt,
@@ -52,7 +57,11 @@ export default function Appointment({ data, onSubscription }) {
           (!data.subscribed ? (
             <Button onPress={onSubscription}>Fazer Inscrição</Button>
           ) : (
-            <Button style={{ opacity: 0.5 }} disabled onPress={onSubscription}>
+            <Button
+              style={{ opacity: 0.5 }}
+              disabled
+              onPress={subscribed ? onCancel : onSubscription}
+            >
               Inscrito
             </Button>
           ))}

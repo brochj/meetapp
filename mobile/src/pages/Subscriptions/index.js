@@ -1,21 +1,20 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
-import { format, subDays, addDays } from 'date-fns';
-import { useDispatch } from 'react-redux';
-// import { utcToZonedTime } from 'date-fns-tz';
-import pt from 'date-fns/locale/pt';
-// import Intl from 'react-native-intl';
+import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import api from '~/services/api';
 
+import { getSubscriptionRequest } from '~/store/modules/meetup/actions';
+
 import Background from '~/components/Background';
 import Meetup from '~/components/Meetup';
 
-import { Container, List, DateInfo, Header, ChevronIcon, Fim } from './styles';
+import { Container, List, Title, Fim } from './styles';
 
 export default function Subscriptions() {
   const dispatch = useDispatch();
+  const subscriptions = useSelector(state => state.meetup.subscriptions);
   const [meetups, setMeetups] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -25,7 +24,8 @@ export default function Subscriptions() {
 
   useEffect(() => {
     setMeetups([]);
-    async function loadMeetups() {
+    dispatch(getSubscriptionRequest());
+    async function loadSubscriptions() {
       setInitialLoading(true);
       const response = await api.get('meetups', {
         params: { date, page },
@@ -36,7 +36,7 @@ export default function Subscriptions() {
       setCanLoadMore(true);
       // setInitialLoading(false);
     }
-    loadMeetups();
+    loadSubscriptions();
   }, [date]); // eslint-disable-line
 
   async function handleSubscription(id) {
@@ -87,10 +87,12 @@ export default function Subscriptions() {
   return (
     <Background>
       <Container>
+        {/* <Title>Suas inscrições</Title> */}
+
         {!initialLoading && <Fim>Nenhum Meetup nesse dia</Fim>}
 
         <List
-          data={meetups}
+          data={subscriptions}
           refreshing={refreshing}
           onRefresh={() => handleRefresh()}
           onEndReachedThreshold={0.15}
@@ -105,8 +107,9 @@ export default function Subscriptions() {
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
             <Meetup
-              onSubscription={() => handleSubscription(item.id)}
-              data={item}
+              onSubscription={() => handleSubscription(item.Meetup.id)}
+              data={item.Meetup}
+              subscribed
             />
           )}
         />
@@ -116,7 +119,7 @@ export default function Subscriptions() {
 }
 
 Subscriptions.navigationOptions = {
-  tabBarLabel: 'Subscriptions',
+  tabBarLabel: 'Suas Inscrições',
   tabBarIcon: ({ tintColor }) => (
     <Icon name="local-offer" size={20} color={tintColor} />
   ),

@@ -2,12 +2,14 @@ import { Op } from 'sequelize';
 import User from '../models/User';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
+import File from '../models/File';
 
 import SubscriptionMail from '../jobs/SubscriptionMail';
 import Queue from '../../lib/Queue';
 
 class SubscriptionController {
   async index(req, res) {
+    const page = req.query.page || 1;
     const subscriptions = await Subscription.findAll({
       where: {
         user_id: req.userId,
@@ -21,8 +23,20 @@ class SubscriptionController {
             },
           },
           required: true,
+          include: [
+            {
+              model: User,
+              attributes: ['name', 'email', 'avatar_id'],
+            },
+            {
+              model: File,
+              attributes: ['name', 'path', 'url'],
+            },
+          ],
         },
       ],
+      limit: 15,
+      offset: 15 * page - 15,
       order: [[Meetup, 'date']],
     });
 
@@ -85,6 +99,20 @@ class SubscriptionController {
     await Queue.add(SubscriptionMail.key, { meetup, user });
 
     return res.json(subscription);
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+    const subscription = await Subscription.findByPk(id);
+
+    if (subscription.user_id !== req.userId)
+      return res.status(401).json({
+        error: 'You do not have permission to delete this subscription',
+      });
+
+    await subscription.destroy();
+
+    return res.send();
   }
 }
 
