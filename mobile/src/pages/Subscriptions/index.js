@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { ActivityIndicator, Alert, ToastAndroid } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useIsFocused } from 'react-navigation-hooks';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import api from '~/services/api';
 
@@ -21,7 +22,6 @@ export default function Subscriptions() {
   const isFocused = useIsFocused();
   const subscriptions = useSelector(state => state.meetup.subscriptions);
   const [refreshing, setRefreshing] = useState(false);
-  const [date, setDate] = useState(new Date());
   const [page, setPage] = useState(1);
   const [initialLoading, setInitialLoading] = useState(false);
   const [canLoadMore, setCanLoadMore] = useState(true);
@@ -35,10 +35,9 @@ export default function Subscriptions() {
       if (response.data.length === 0) setInitialLoading(false);
 
       setCanLoadMore(true);
-      // setInitialLoading(false);
     }
     loadSubscriptions();
-  }, [date, isFocused]); // eslint-disable-line
+  }, [isFocused]); // eslint-disable-line
 
   async function handleCancel(id) {
     try {
@@ -58,7 +57,7 @@ export default function Subscriptions() {
   async function handleOnEndReached() {
     if (canLoadMore) {
       const response = await api.get('subscriptions', {
-        params: { page: page + 1, date },
+        params: { page: page + 1 },
       });
 
       if (response.data.length === 0) setCanLoadMore(false);
@@ -111,4 +110,8 @@ Subscriptions.navigationOptions = {
   tabBarIcon: ({ tintColor }) => (
     <Icon name="local-offer" size={20} color={tintColor} />
   ),
+};
+
+Subscriptions.defaultProps = {
+  tintColor: PropTypes.string.isRequired,
 };

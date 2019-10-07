@@ -31,10 +31,11 @@ export default function Subscription({ data, onCancel, loading }) {
           uri: 'https://api.adorable.io/avatars/85/abott@adorable.io.png',
         }}
       />
-      {/* <Banner source={{ uri: data.File.url }} /> */}
+      <Banner source={{ uri: data.File.url }} />
 
       <Info>
         <Title>{data.id}</Title>
+        <Title>{data.File.url}</Title>
         <Row>
           <Icon name="event" size={20} color="rgba(0,0,0,0.4)" />
           <Time>{dateParsed}s</Time>

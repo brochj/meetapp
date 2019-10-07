@@ -51,9 +51,6 @@ export default function Meetups() {
           return { ...meetup };
         })
       );
-      // console.tron.log(isSubscribed);
-      // setMeetups(response.data);
-
       setCanLoadMore(true);
     }
     loadMeetups();
