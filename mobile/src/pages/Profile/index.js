@@ -65,7 +65,6 @@ export default function Profile() {
         <FormInput
           icon="person-outline"
           autoCorrect={false}
-          autoFocus
           blurOnSubmit={false}
           placeholder="Nome Completo"
           returnKeyType="next"

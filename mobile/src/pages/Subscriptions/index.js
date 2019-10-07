@@ -14,7 +14,7 @@ import Meetup from '~/components/Meetup';
 
 import { Container, List, DateInfo, Header, ChevronIcon, Fim } from './styles';
 
-export default function Meetups() {
+export default function Subscriptions() {
   const dispatch = useDispatch();
   const [meetups, setMeetups] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -22,11 +22,6 @@ export default function Meetups() {
   const [page, setPage] = useState(1);
   const [initialLoading, setInitialLoading] = useState(false);
   const [canLoadMore, setCanLoadMore] = useState(true);
-
-  const dateFormatted = useMemo(
-    () => format(date, "d 'de' MMMM", { locale: pt }),
-    [date]
-  );
 
   useEffect(() => {
     setMeetups([]);
@@ -89,26 +84,9 @@ export default function Meetups() {
     setCanLoadMore(true);
   }
 
-  function handlePrevDay() {
-    setDate(subDays(date, 1));
-  }
-
-  function handleNextDay() {
-    setDate(addDays(date, 1));
-  }
   return (
     <Background>
       <Container>
-        <Header>
-          <ChevronIcon onPress={handlePrevDay}>
-            <Icon name="chevron-left" size={36} color="#fff" />
-          </ChevronIcon>
-          <DateInfo>{dateFormatted}</DateInfo>
-          <ChevronIcon onPress={handleNextDay}>
-            <Icon name="chevron-right" size={36} color="#fff" />
-          </ChevronIcon>
-        </Header>
-
         {!initialLoading && <Fim>Nenhum Meetup nesse dia</Fim>}
 
         <List
@@ -121,7 +99,7 @@ export default function Meetups() {
             canLoadMore ? (
               initialLoading && <ActivityIndicator color="#f94d6a" />
             ) : (
-              <Fim>Acabou os Meetups</Fim>
+              <Fim>Acabou os Subscriptions</Fim>
             )
           }
           keyExtractor={item => String(item.id)}
@@ -137,9 +115,9 @@ export default function Meetups() {
   );
 }
 
-Meetups.navigationOptions = {
-  tabBarLabel: 'Meetups',
+Subscriptions.navigationOptions = {
+  tabBarLabel: 'Subscriptions',
   tabBarIcon: ({ tintColor }) => (
-    <Icon name="event" size={20} color={tintColor} />
+    <Icon name="local-offer" size={20} color={tintColor} />
   ),
 };

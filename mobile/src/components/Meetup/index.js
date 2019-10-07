@@ -48,9 +48,14 @@ export default function Appointment({ data, onSubscription }) {
           <User>{data.User.name}</User>
         </Row>
 
-        {!data.past && (
-          <Button onPress={onSubscription}>Fazer Inscrição</Button>
-        )}
+        {!data.past &&
+          (!data.subscribed ? (
+            <Button onPress={onSubscription}>Fazer Inscrição</Button>
+          ) : (
+            <Button style={{ opacity: 0.5 }} disabled onPress={onSubscription}>
+              Inscrito
+            </Button>
+          ))}
       </Info>
     </Container>
   );
