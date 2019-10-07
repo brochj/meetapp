@@ -16,7 +16,7 @@ import {
   Info,
 } from './styles';
 
-export default function Meetup({ data, onSubscription, onCancel, subscribed }) {
+export default function Subscription({ data, onCancel }) {
   const dateParsed = useMemo(() => {
     return formatRelative(parseISO(data.date), new Date(), {
       locale: pt,
@@ -48,18 +48,7 @@ export default function Meetup({ data, onSubscription, onCancel, subscribed }) {
           <User>{data.User.name}</User>
         </Row>
 
-        {!data.past &&
-          (!data.subscribed ? (
-            <Button onPress={onSubscription}>Fazer Inscrição</Button>
-          ) : (
-            <Button
-              style={{ opacity: 0.5 }}
-              disabled
-              onPress={subscribed ? onCancel : onSubscription}
-            >
-              Inscrito
-            </Button>
-          ))}
+        {!data.past && <Button onPress={onCancel}>Cancelar Inscrição</Button>}
       </Info>
     </Container>
   );

@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert } from 'react-native';
+import { ActivityIndicator, Alert, ToastAndroid } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useIsFocused } from 'react-navigation-hooks';
 
 import api from '~/services/api';
 
-import { getSubscriptionRequest } from '~/store/modules/meetup/actions';
+import {
+  getSubscriptionRequest,
+  setSubscriptions,
+} from '~/store/modules/meetup/actions';
 
 import Background from '~/components/Background';
-import Meetup from '~/components/Meetup';
+import Subscription from '~/components/Subscription';
 
 import { Container, List, Title, Fim } from './styles';
 
 export default function Subscriptions() {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const subscriptions = useSelector(state => state.meetup.subscriptions);
   const [meetups, setMeetups] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -27,9 +32,7 @@ export default function Subscriptions() {
     dispatch(getSubscriptionRequest());
     async function loadSubscriptions() {
       setInitialLoading(true);
-      const response = await api.get('meetups', {
-        params: { date, page },
-      });
+      const response = await api.get('subscriptions');
       setMeetups(response.data);
       if (response.data.length === 0) setInitialLoading(false);
 
@@ -37,48 +40,37 @@ export default function Subscriptions() {
       // setInitialLoading(false);
     }
     loadSubscriptions();
-  }, [date]); // eslint-disable-line
+  }, [date, isFocused]); // eslint-disable-line
 
-  async function handleSubscription(id) {
+  async function handleCancel(id) {
     try {
-      const response = await api.post(`meetups/${id}/subscriptions`);
-      if (response.data.id) {
-        setMeetups(
-          meetups.map(meetup => {
-            if (meetup.id === response.data.meetup_id) {
-              return { ...meetup, subscribed: true };
-            }
-            return { ...meetup };
-          })
-        );
-      }
+      await api.delete(`subscriptions/${id}`);
+      ToastAndroid.show('Você se desiscreveu do meetup', ToastAndroid.SHORT);
     } catch (err) {
       Alert.alert(
         'Erro',
-        `Não foi possível se inscrever, tente novamente mais tarde${err}`
+        `Não foi possível se desinscrever, tente novamente mais tarde${err}`
       );
     }
+    dispatch(getSubscriptionRequest());
   }
 
   async function handleOnEndReached() {
     if (canLoadMore) {
-      const response = await api.get('meetups', {
+      const response = await api.get('subscriptions', {
         params: { page: page + 1, date },
       });
 
       if (response.data.length === 0) setCanLoadMore(false);
 
-      setMeetups([...meetups, ...response.data]);
+      setSubscriptions([...subscriptions, ...response.data]);
       setPage(page + 1);
     }
   }
 
   async function handleRefresh() {
     setRefreshing(true);
-    const response = await api.get('meetups', {
-      params: { date, page: 1 },
-    });
-    setMeetups(response.data);
+    dispatch(getSubscriptionRequest());
     setPage(1);
     setRefreshing(false);
     setCanLoadMore(true);
@@ -87,9 +79,7 @@ export default function Subscriptions() {
   return (
     <Background>
       <Container>
-        {/* <Title>Suas inscrições</Title> */}
-
-        {!initialLoading && <Fim>Nenhum Meetup nesse dia</Fim>}
+        {subscriptions.length === 0 && <Fim>Nenhuma Inscrição feita</Fim>}
 
         <List
           data={subscriptions}
@@ -101,15 +91,14 @@ export default function Subscriptions() {
             canLoadMore ? (
               initialLoading && <ActivityIndicator color="#f94d6a" />
             ) : (
-              <Fim>Acabou os Subscriptions</Fim>
+              <Fim>Acabou suas inscrições</Fim>
             )
           }
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
-            <Meetup
-              onSubscription={() => handleSubscription(item.Meetup.id)}
+            <Subscription
+              onCancel={() => handleCancel(item.id)}
               data={item.Meetup}
-              subscribed
             />
           )}
         />

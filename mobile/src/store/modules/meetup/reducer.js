@@ -17,6 +17,10 @@ export default function auth(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
+      case '@meetup/SET_SUBSCRIPTIONS_SUCCESS': {
+        draft.subscriptions = action.payload.subscriptions;
+        break;
+      }
       case '@meetup/SUBSCRIPTION_FAILURE': {
         draft.loading = false;
         break;
