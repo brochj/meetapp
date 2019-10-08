@@ -110,9 +110,19 @@ export default function Meetups() {
 
       if (response.data.length === 0) setCanLoadMore(false);
 
-      setMeetups([...meetups, ...response.data]);
+      setMeetups([...meetups, ...changeImageUrl(response.data)]);
       setPage(page + 1);
     }
+  }
+
+  function changeImageUrl(data) {
+    return data.map(meetup => ({
+      ...meetup,
+      File: {
+        ...meetup.File,
+        url: meetup.File.url.replace('localhost', appConfig.imagesHost),
+      },
+    }));
   }
 
   async function handleRefresh() {
@@ -120,7 +130,7 @@ export default function Meetups() {
     const response = await api.get('meetups', {
       params: { date, page: 1 },
     });
-    setMeetups(response.data);
+    setMeetups(changeImageUrl(response.data));
     setPage(1);
     setRefreshing(false);
     setCanLoadMore(true);
@@ -158,8 +168,8 @@ export default function Meetups() {
             canLoadMore ? (
               initialLoading && <ActivityIndicator color="#f94d6a" />
             ) : (
-              <Fim>Acabou os Meetups</Fim>
-            )
+                <Fim>Acabou os Meetups</Fim>
+              )
           }
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
