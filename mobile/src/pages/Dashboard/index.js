@@ -168,8 +168,8 @@ export default function Meetups() {
             canLoadMore ? (
               initialLoading && <ActivityIndicator color="#f94d6a" />
             ) : (
-                <Fim>Acabou os Meetups</Fim>
-              )
+              <Fim>Acabou os Meetups</Fim>
+            )
           }
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
