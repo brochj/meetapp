@@ -2,9 +2,10 @@ const faker = require('faker'); // eslint-disable-line
 
 const users = [];
 
-for (let id = 1; id <= 20; id += 1) {
+for (let i = 1; i <= 300; i += 1) {
   const date = new Date();
   users.push({
+    id: i,
     name: faker.name.findName(),
     email: faker.internet.email(),
     password_hash:
