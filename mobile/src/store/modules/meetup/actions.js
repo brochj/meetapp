@@ -23,3 +23,30 @@ export function subscriptionFailure() {
     type: '@meetup/SUBSCRIPTION_FAILURE',
   };
 }
+
+export function getMeetupsRequest(date, page) {
+  return {
+    type: '@meetup/GET_MEETUPS_REQUEST',
+    payload: { date, page },
+  };
+}
+
+export function getMeetupsSuccess(meetups) {
+  return {
+    type: '@meetup/GET_MEETUPS_SUCCESS',
+    payload: { meetups },
+  };
+}
+
+export function setMeetups(meetups) {
+  return {
+    type: '@meetup/SET_MEETUPS_SUCCESS',
+    payload: { meetups },
+  };
+}
+
+export function meetupFailure() {
+  return {
+    type: '@meetup/MEETUP_FAILURE',
+  };
+}

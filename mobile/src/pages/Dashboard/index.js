@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
 import { format, subDays, addDays } from 'date-fns';
 import { useIsFocused } from 'react-navigation-hooks';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
 import pt from 'date-fns/locale/pt';
@@ -12,9 +12,11 @@ import api from '~/services/api';
 import Background from '~/components/Background';
 import Meetup from '~/components/Meetup';
 
+import { getMeetupsRequest } from '~/store/modules/meetup/actions';
 import { Container, List, DateInfo, Header, ChevronIcon, Fim } from './styles';
 
 export default function Meetups() {
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const subscriptions = useSelector(state => state.meetup.subscriptions);
   const [meetups, setMeetups] = useState([]);
@@ -30,6 +32,7 @@ export default function Meetups() {
   );
 
   useEffect(() => {
+    dispatch(getMeetupsRequest(date, page));
     setMeetups([]);
     async function loadMeetups() {
       setInitialLoading(true);
@@ -156,7 +159,7 @@ export default function Meetups() {
           </ChevronIcon>
         </Header>
 
-        {!initialLoading && <Fim>Nenhum Meetup nesse dia</Fim>}
+        {meetups.length === 0 && <Fim>Nenhum Meetup nesse dia</Fim>}
 
         <List
           data={meetups}

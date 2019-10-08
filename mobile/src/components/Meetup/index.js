@@ -29,7 +29,7 @@ export default function Meetup({ data, onSubscription }) {
       <Banner source={{ uri: data.File.url }} />
 
       <Info>
-        <Title>{data.id}</Title>
+        <Title>{data.title}</Title>
         <Row>
           <Icon name="event" size={20} color="rgba(0,0,0,0.4)" />
           <Time>{dateParsed}s</Time>
@@ -59,6 +59,7 @@ export default function Meetup({ data, onSubscription }) {
 Meetup.propTypes = {
   data: PropTypes.shape({
     date: PropTypes.string,
+    title: PropTypes.string,
     past: PropTypes.bool,
     subscribed: PropTypes.bool,
     id: PropTypes.number,
