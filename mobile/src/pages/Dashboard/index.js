@@ -1,23 +1,20 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
 import { format, subDays, addDays } from 'date-fns';
-import { useDispatch, useSelector } from 'react-redux';
 import { useIsFocused } from 'react-navigation-hooks';
-// import { utcToZonedTime } from 'date-fns-tz';
-import pt from 'date-fns/locale/pt';
-// import Intl from 'react-native-intl';
+import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import PropTypes from 'prop-types';
+import pt from 'date-fns/locale/pt';
+
 import appConfig from '~/config/appConfig';
-
 import api from '~/services/api';
-
 import Background from '~/components/Background';
 import Meetup from '~/components/Meetup';
 
 import { Container, List, DateInfo, Header, ChevronIcon, Fim } from './styles';
 
 export default function Meetups() {
-  const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const subscriptions = useSelector(state => state.meetup.subscriptions);
   const [meetups, setMeetups] = useState([]);
@@ -105,17 +102,6 @@ export default function Meetups() {
     }
   }
 
-  // const hostChanged = response.data.map(sub => ({
-  //   ...sub,
-  //   Meetup: {
-  //     ...sub.Meetup,
-  //     File: {
-  //       ...sub.Meetup.File,
-  //       url: sub.Meetup.File.url.replace('localhost', appConfig.imagesHost),
-  //     },
-  //   },
-  // }));
-
   async function handleOnEndReached() {
     if (canLoadMore) {
       const response = await api.get('meetups', {
@@ -188,9 +174,15 @@ export default function Meetups() {
   );
 }
 
+function tabBarIcon({ tintColor }) {
+  return <Icon name="event" size={20} color={tintColor} />;
+}
+
+tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired,
+};
+
 Meetups.navigationOptions = {
   tabBarLabel: 'Meetups',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="event" size={20} color={tintColor} />
-  ),
+  tabBarIcon,
 };

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { parseISO, formatRelative } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -51,3 +52,22 @@ export default function Subscription({ data, onCancel, loading }) {
     </Container>
   );
 }
+
+Subscription.propTypes = {
+  data: PropTypes.shape({
+    date: PropTypes.string,
+    title: PropTypes.string,
+    past: PropTypes.bool,
+    subscribed: PropTypes.bool,
+    id: PropTypes.number,
+    location: PropTypes.string,
+    User: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    File: PropTypes.shape({
+      url: PropTypes.string,
+    }),
+  }).isRequired,
+  onCancel: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+};

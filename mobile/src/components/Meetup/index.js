@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { parseISO, formatRelative } from 'date-fns';
 import pt from 'date-fns/locale/pt';
-import { TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Button from '~/components/Button';
 
@@ -16,7 +16,7 @@ import {
   Info,
 } from './styles';
 
-export default function Meetup({ data, onSubscription, onCancel, subscribed }) {
+export default function Meetup({ data, onSubscription }) {
   const dateParsed = useMemo(() => {
     return formatRelative(parseISO(data.date), new Date(), {
       locale: pt,
@@ -47,11 +47,7 @@ export default function Meetup({ data, onSubscription, onCancel, subscribed }) {
           (!data.subscribed ? (
             <Button onPress={onSubscription}>Fazer Inscrição</Button>
           ) : (
-            <Button
-              style={{ opacity: 0.5 }}
-              disabled
-              onPress={subscribed ? onCancel : onSubscription}
-            >
+            <Button style={{ opacity: 0.5 }} disabled={data.subscribed}>
               Inscrito
             </Button>
           ))}
@@ -59,3 +55,20 @@ export default function Meetup({ data, onSubscription, onCancel, subscribed }) {
     </Container>
   );
 }
+
+Meetup.propTypes = {
+  data: PropTypes.shape({
+    date: PropTypes.string,
+    past: PropTypes.bool,
+    subscribed: PropTypes.bool,
+    id: PropTypes.number,
+    location: PropTypes.string,
+    User: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    File: PropTypes.shape({
+      url: PropTypes.string,
+    }),
+  }).isRequired,
+  onSubscription: PropTypes.func.isRequired,
+};

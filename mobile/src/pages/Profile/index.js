@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { updateProfileRequest } from '~/store/modules/user/actions';
 import { signOut } from '~/store/modules/auth/actions';
-
 import Background from '~/components/Background';
+
 import {
   Container,
   Title,
@@ -132,9 +132,15 @@ export default function Profile() {
   );
 }
 
+function tabBarIcon({ tintColor }) {
+  return <Icon name="person" size={20} color={tintColor} />;
+}
+
+tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired,
+};
+
 Profile.navigationOptions = {
   tabBarLabel: 'Meu perfil',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="person" size={20} color={tintColor} />
-  ),
+  tabBarIcon,
 };

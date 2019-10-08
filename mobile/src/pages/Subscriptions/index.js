@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { ActivityIndicator, Alert, ToastAndroid } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIsFocused } from 'react-navigation-hooks';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
-import api from '~/services/api';
+import PropTypes from 'prop-types';
 
 import {
   getSubscriptionRequest,
   setSubscriptions,
 } from '~/store/modules/meetup/actions';
 
+import api from '~/services/api';
 import Background from '~/components/Background';
 import Subscription from '~/components/Subscription';
 
@@ -105,13 +104,15 @@ export default function Subscriptions() {
   );
 }
 
-Subscriptions.navigationOptions = {
-  tabBarLabel: 'Suas Inscrições',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="local-offer" size={20} color={tintColor} />
-  ),
+function tabBarIcon({ tintColor }) {
+  return <Icon name="local-offer" size={20} color={tintColor} />;
+}
+
+tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired,
 };
 
-Subscriptions.defaultProps = {
-  tintColor: PropTypes.string.isRequired,
+Subscriptions.navigationOptions = {
+  tabBarLabel: 'Suas Inscrições',
+  tabBarIcon,
 };
