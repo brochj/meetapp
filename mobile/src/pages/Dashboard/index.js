@@ -72,29 +72,20 @@ export default function Meetups() {
   }, [date, isFocused]); // eslint-disable-line
 
   async function handleSubscription(item, index) {
-    const response = await api.post(`meetups/${item.id}/subscriptions`);
-    if (response.data.id) {
+    try {
+      const response = await api.post(`meetups/${item.id}/subscriptions`);
       setMeetups(
         meetups.map(meetup => {
           if (meetup.id === response.data.meetup_id) {
-            return {
-              ...meetup,
-              subscribed: true,
-              File: {
-                ...meetup.File,
-                url: meetup.File.url.replace('localhost', appConfig.imagesHost),
-              },
-            };
+            return { ...meetup, subscribed: true };
           }
-
-          return {
-            ...meetup,
-            File: {
-              ...meetup.File,
-              url: meetup.File.url.replace('localhost', appConfig.imagesHost),
-            },
-          };
+          return meetup;
         })
+      );
+    } catch (err) {
+      Alert.alert(
+        'Erro',
+        'Não pode se inscrever em meetups com horários próximos'
       );
     }
   }
@@ -107,27 +98,17 @@ export default function Meetups() {
 
       if (response.data.length === 0) setCanLoadMore(false);
 
-      setMeetups([...meetups, ...changeImageUrl(response.data)]);
+      setMeetups([...meetups, ...changeHost(response.data)]);
       setPage(page + 1);
     }
-  }
-
-  function changeImageUrl(data) {
-    return data.map(meetup => ({
-      ...meetup,
-      File: {
-        ...meetup.File,
-        url: meetup.File.url.replace('localhost', appConfig.imagesHost),
-      },
-    }));
   }
 
   async function handleRefresh() {
     setRefreshing(true);
     const response = await api.get('meetups', {
-      params: { date, page: 1 },
+      params: { date },
     });
-    setMeetups(changeImageUrl(response.data));
+    setMeetups(changeHost(response.data));
     setPage(1);
     setRefreshing(false);
     setCanLoadMore(true);
