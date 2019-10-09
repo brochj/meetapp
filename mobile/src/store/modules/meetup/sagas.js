@@ -38,12 +38,10 @@ export function* getMeetups({ payload }) {
   try {
     const { date, page } = payload;
     const formattedDate = format(date, 'yyyy-MM-dd');
-    console.tron.log(formattedDate);
     const response = yield call(
       api.get,
       `meetups?page=${page}&date=${formattedDate}`
     );
-    console.tron.log(response.data);
 
     if (response.data.length !== 0) {
       const hostChanged = response.data.map(meetup => ({

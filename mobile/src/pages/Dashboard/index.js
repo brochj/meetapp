@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
 import { format, subDays, addDays } from 'date-fns';
 import { useIsFocused } from 'react-navigation-hooks';
@@ -7,13 +7,23 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
 import pt from 'date-fns/locale/pt';
 
+import { store } from '~/store';
 import appConfig from '~/config/appConfig';
+import { changeHost } from '~/util/scripts';
 import api from '~/services/api';
 import Background from '~/components/Background';
 import Meetup from '~/components/Meetup';
 
 import { getMeetupsRequest } from '~/store/modules/meetup/actions';
-import { Container, List, DateInfo, Header, ChevronIcon, Fim } from './styles';
+import {
+  Container,
+  List,
+  DateInfo,
+  Header,
+  ChevronIcon,
+  Fim,
+  Loading,
+} from './styles';
 
 export default function Meetups() {
   const dispatch = useDispatch();
@@ -21,6 +31,7 @@ export default function Meetups() {
   const subscriptions = useSelector(state => state.meetup.subscriptions);
   const [meetups, setMeetups] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [page, setPage] = useState(1);
   const [initialLoading, setInitialLoading] = useState(false);
@@ -32,21 +43,40 @@ export default function Meetups() {
   );
 
   useEffect(() => {
-    dispatch(getMeetupsRequest(date, page));
+    // dispatch(getMeetupsRequest(date, page));
+
     setMeetups([]);
     async function loadMeetups() {
       setInitialLoading(true);
       const response = await api.get('meetups', {
         params: { date, page },
       });
-      if (response.data.length === 0) setInitialLoading(false);
+      if (response.data.length === 0) {
+        setInitialLoading(false);
+      }
 
+      const changedHost = changeHost(response.data);
       setMeetups(
-        response.data.map(meetup => {
+        changedHost.map(meetup => {
           const isSubscribed = subscriptions.find(
             sub => sub.Meetup.id === meetup.id
           );
           if (isSubscribed) {
+            return { ...meetup, subscribed: true };
+          }
+          return meetup;
+        })
+      );
+    }
+    loadMeetups();
+  }, [date, isFocused]); // eslint-disable-line
+
+  async function handleSubscription(item, index) {
+    const response = await api.post(`meetups/${item.id}/subscriptions`);
+    if (response.data.id) {
+      setMeetups(
+        meetups.map(meetup => {
+          if (meetup.id === response.data.meetup_id) {
             return {
               ...meetup,
               subscribed: true,
@@ -56,6 +86,7 @@ export default function Meetups() {
               },
             };
           }
+
           return {
             ...meetup,
             File: {
@@ -65,43 +96,6 @@ export default function Meetups() {
           };
         })
       );
-      setCanLoadMore(true);
-    }
-    loadMeetups();
-  }, [date, isFocused]); // eslint-disable-line
-
-  async function handleSubscription(id) {
-    try {
-      const response = await api.post(`meetups/${id}/subscriptions`);
-      if (response.data.id) {
-        setMeetups(
-          meetups.map(meetup => {
-            if (meetup.id === response.data.meetup_id) {
-              return {
-                ...meetup,
-                subscribed: true,
-                File: {
-                  ...meetup.File,
-                  url: meetup.File.url.replace(
-                    'localhost',
-                    appConfig.imagesHost
-                  ),
-                },
-              };
-            }
-
-            return {
-              ...meetup,
-              File: {
-                ...meetup.File,
-                url: meetup.File.url.replace('localhost', appConfig.imagesHost),
-              },
-            };
-          })
-        );
-      }
-    } catch (err) {
-      Alert.alert('Error', `${err.response.data.error}`);
     }
   }
 
@@ -158,30 +152,37 @@ export default function Meetups() {
             <Icon name="chevron-right" size={36} color="#fff" />
           </ChevronIcon>
         </Header>
+        {loading ? (
+          <Loading>
+            <ActivityIndicator size="large" color="#f94d6a" />
+          </Loading>
+        ) : (
+          <>
+            {/* {meetups.length === 0 && <Fim>Nenhum Meetup nesse dia</Fim>} */}
 
-        {meetups.length === 0 && <Fim>Nenhum Meetup nesse dia</Fim>}
-
-        <List
-          data={meetups}
-          refreshing={refreshing}
-          onRefresh={() => handleRefresh()}
-          onEndReachedThreshold={0.15}
-          onEndReached={() => handleOnEndReached()}
-          ListFooterComponent={
-            canLoadMore ? (
-              initialLoading && <ActivityIndicator color="#f94d6a" />
-            ) : (
-              <Fim>Acabou os Meetups</Fim>
-            )
-          }
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <Meetup
-              onSubscription={() => handleSubscription(item.id)}
-              data={item}
+            <List
+              data={meetups}
+              refreshing={refreshing}
+              onRefresh={() => handleRefresh()}
+              onEndReachedThreshold={0.15}
+              onEndReached={() => handleOnEndReached()}
+              ListFooterComponent={
+                canLoadMore ? (
+                  initialLoading && <ActivityIndicator color="#f94d6a" />
+                ) : (
+                  <Fim>Acabou os Meetups</Fim>
+                )
+              }
+              keyExtractor={item => String(item.id)}
+              renderItem={({ item, index }) => (
+                <Meetup
+                  onSubscription={() => handleSubscription(item, index)}
+                  data={item}
+                />
+              )}
             />
-          )}
-        />
+          </>
+        )}
       </Container>
     </Background>
   );
