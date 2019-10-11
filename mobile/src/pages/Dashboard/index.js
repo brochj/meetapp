@@ -1,37 +1,24 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
 import { format, subDays, addDays } from 'date-fns';
 import { useIsFocused } from 'react-navigation-hooks';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
 import pt from 'date-fns/locale/pt';
 
-import { store } from '~/store';
-import appConfig from '~/config/appConfig';
 import { changeHost } from '~/util/scripts';
 import api from '~/services/api';
 import Background from '~/components/Background';
 import Meetup from '~/components/Meetup';
 
-import { getMeetupsRequest } from '~/store/modules/meetup/actions';
-import {
-  Container,
-  List,
-  DateInfo,
-  Header,
-  ChevronIcon,
-  Fim,
-  Loading,
-} from './styles';
+import { Container, List, DateInfo, Header, ChevronIcon, Fim } from './styles';
 
 export default function Meetups() {
-  const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const subscriptions = useSelector(state => state.meetup.subscriptions);
   const [meetups, setMeetups] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [page, setPage] = useState(1);
   const [initialLoading, setInitialLoading] = useState(false);
@@ -43,8 +30,6 @@ export default function Meetups() {
   );
 
   useEffect(() => {
-    // dispatch(getMeetupsRequest(date, page));
-
     setMeetups([]);
     async function loadMeetups() {
       setInitialLoading(true);
@@ -71,7 +56,7 @@ export default function Meetups() {
     loadMeetups();
   }, [date, isFocused]); // eslint-disable-line
 
-  async function handleSubscription(item, index) {
+  async function handleSubscription(item) {
     try {
       const response = await api.post(`meetups/${item.id}/subscriptions`);
       setMeetups(
@@ -133,37 +118,32 @@ export default function Meetups() {
             <Icon name="chevron-right" size={36} color="#fff" />
           </ChevronIcon>
         </Header>
-        {loading ? (
-          <Loading>
-            <ActivityIndicator size="large" color="#f94d6a" />
-          </Loading>
-        ) : (
-          <>
-            {/* {meetups.length === 0 && <Fim>Nenhum Meetup nesse dia</Fim>} */}
 
-            <List
-              data={meetups}
-              refreshing={refreshing}
-              onRefresh={() => handleRefresh()}
-              onEndReachedThreshold={0.15}
-              onEndReached={() => handleOnEndReached()}
-              ListFooterComponent={
-                canLoadMore ? (
-                  initialLoading && <ActivityIndicator color="#f94d6a" />
-                ) : (
-                  <Fim>Acabou os Meetups</Fim>
-                )
-              }
-              keyExtractor={item => String(item.id)}
-              renderItem={({ item, index }) => (
-                <Meetup
-                  onSubscription={() => handleSubscription(item, index)}
-                  data={item}
-                />
-              )}
+        {meetups.length === 0 && !initialLoading ? (
+          <Fim>Nenhum Meetup nesse dia</Fim>
+        ) : null}
+
+        <List
+          data={meetups}
+          refreshing={refreshing}
+          onRefresh={() => handleRefresh()}
+          onEndReachedThreshold={0.15}
+          onEndReached={() => handleOnEndReached()}
+          ListFooterComponent={
+            canLoadMore ? (
+              initialLoading && <ActivityIndicator color="#f94d6a" />
+            ) : (
+              <Fim>Acabou os Meetups</Fim>
+            )
+          }
+          keyExtractor={item => String(item.id)}
+          renderItem={({ item }) => (
+            <Meetup
+              onSubscription={() => handleSubscription(item)}
+              data={item}
             />
-          </>
-        )}
+          )}
+        />
       </Container>
     </Background>
   );
