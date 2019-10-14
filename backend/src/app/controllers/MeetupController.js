@@ -29,7 +29,7 @@ class MeetupController {
       ],
       limit: 15,
       offset: 15 * page - 15,
-      order: ['id'],
+      order: [['date', 'DESC']],
     });
 
     return res.json(meetups);
