@@ -39,7 +39,7 @@ export default function AvartInput() {
     <Container>
       <label htmlFor="banner">
         {preview ? (
-          <img src={preview} alt="" />
+          <img src={preview} alt="preview" />
         ) : (
           <div>
             <MdAddAPhoto color="#666" size={55} />

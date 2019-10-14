@@ -23,7 +23,7 @@ const schema = Yup.object().shape({
     )
     .max(
       25,
-      'Tente algo como: "12/12/2019 , às  15 h", "15/05/2019 , às 03 horas" '
+      'Tente algo como: "25/12/2019 , às  15 h", "15/05/2019 , às 03 horas" '
     )
     .required(
       'A data do Meetup é obrigatório. Exemplo "12/12/2019 , às  15 h"'

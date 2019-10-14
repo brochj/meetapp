@@ -21,8 +21,7 @@ export function* updateProfile({ payload }) {
 
     yield put(updateProfileSuccess(response.data));
   } catch (err) {
-    console.tron.log(err);
-    toast.error('Erro ao atulizar perfil, confira seus dados');
+    toast.error(`${err.response.data.error}`);
 
     yield put(updateProfileFailure());
   }
