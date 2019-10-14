@@ -2,10 +2,10 @@ const faker = require('faker'); // eslint-disable-line
 
 const meetups = [];
 
-for (let i = 1; i <= 5000; i += 1) {
+for (let i = 1; i <= 1500; i += 1) {
   meetups.push({
     file_id: faker.random.number({ min: 1, max: 12 }),
-    user_id: faker.random.number({ min: 1, max: 300 }),
+    user_id: faker.random.number({ min: 1, max: 15 }),
     title: faker.lorem.sentence(faker.random.number(7)),
     description: faker.lorem.sentences(faker.random.number(7), '\n'),
     location: faker.address.city(),
@@ -18,6 +18,9 @@ for (let i = 1; i <= 5000; i += 1) {
 module.exports = {
   up: async queryInterface => {
     await queryInterface.bulkInsert('meetups', meetups, {});
+    await queryInterface.sequelize.query(
+      `ALTER SEQUENCE "meetapps_id_seq" RESTART WITH ${meetups.length + 1}`
+    );
   },
 
   down: queryInterface => queryInterface.bulkDelete('meetups', null, {}),

@@ -54,9 +54,9 @@ class UserController {
     });
     // TODO evitar update de senha atual, exempl oldpassword = password
 
-    schema
-      .validate(req.body)
-      .catch(e => res.status(400).json({ error: e.message }));
+    //schema
+      //.validate(req.body)
+      //.catch(e => res.status(400).json({ error: e.message }));
 
     const { email, oldPassword } = req.body;
 

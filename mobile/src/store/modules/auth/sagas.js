@@ -19,8 +19,8 @@ export function* signIn({ payload }) {
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
     yield put(signInSuccess(token, user));
-  } catch (eer) {
-    Alert.alert('Error', 'Falha na autenticação, verifique seus dados');
+  } catch (err) {
+    Alert.alert('Error', `${JSON.stringify(err.response.data.error, null, 2)}`);
     yield put(signFailure());
   }
 }
@@ -31,7 +31,7 @@ export function* signUp({ payload }) {
 
     yield call(api.post, 'users', { name, email, password });
   } catch (err) {
-    Alert.alert('Error', 'Falha no cadastro, verifique seus dados');
+    Alert.alert('Error', `${JSON.stringify(err.response.data.error, null, 2)}`);
     yield put(signFailure());
   }
 }

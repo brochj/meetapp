@@ -23,6 +23,7 @@ export default function Meetups() {
   const [page, setPage] = useState(1);
   const [initialLoading, setInitialLoading] = useState(false);
   const [canLoadMore, setCanLoadMore] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const dateFormatted = useMemo(
     () => format(date, "d 'de' MMMM", { locale: pt }),
@@ -30,7 +31,10 @@ export default function Meetups() {
   );
 
   useEffect(() => {
+    setPage(1);
+    setCanLoadMore(true);
     setMeetups([]);
+    setInitialLoading(false);
     async function loadMeetups() {
       setInitialLoading(true);
       const response = await api.get('meetups', {
@@ -58,6 +62,7 @@ export default function Meetups() {
 
   async function handleSubscription(item) {
     try {
+      setLoading(true);
       const response = await api.post(`meetups/${item.id}/subscriptions`);
       setMeetups(
         meetups.map(meetup => {
@@ -73,6 +78,7 @@ export default function Meetups() {
         'Não pode se inscrever em meetups com horários próximos'
       );
     }
+    setLoading(false);
   }
 
   async function handleOnEndReached() {
@@ -101,10 +107,12 @@ export default function Meetups() {
 
   function handlePrevDay() {
     setDate(subDays(date, 1));
+    setPage(1);
   }
 
   function handleNextDay() {
     setDate(addDays(date, 1));
+    setPage(1);
   }
   return (
     <Background>
@@ -141,6 +149,7 @@ export default function Meetups() {
             <Meetup
               onSubscription={() => handleSubscription(item)}
               data={item}
+              loading={loading}
             />
           )}
         />

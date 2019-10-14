@@ -2,7 +2,7 @@ const faker = require('faker'); // eslint-disable-line
 
 const users = [];
 
-for (let i = 1; i <= 300; i += 1) {
+for (let i = 1; i <= 15; i += 1) {
   const date = new Date();
   users.push({
     id: i,
@@ -19,6 +19,9 @@ for (let i = 1; i <= 300; i += 1) {
 module.exports = {
   up: async queryInterface => {
     await queryInterface.bulkInsert('users', users, {});
+    await queryInterface.sequelize.query(
+      `ALTER SEQUENCE "users_id_seq" RESTART WITH ${users.length + 1}`
+    );
   },
 
   down: queryInterface => queryInterface.bulkDelete('users', null, {}),

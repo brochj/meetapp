@@ -16,7 +16,7 @@ import {
   Info,
 } from './styles';
 
-export default function Meetup({ data, onSubscription }) {
+export default function Meetup({ data, onSubscription, loading }) {
   const dateParsed = useMemo(() => {
     return formatRelative(parseISO(data.date), new Date(), {
       locale: pt,
@@ -45,7 +45,9 @@ export default function Meetup({ data, onSubscription }) {
 
         {!data.past &&
           (!data.subscribed ? (
-            <Button onPress={onSubscription}>Fazer Inscrição</Button>
+            <Button onPress={onSubscription} loading={loading}>
+              Fazer Inscrição
+            </Button>
           ) : (
             <Button style={{ opacity: 0.5 }} disabled={data.subscribed}>
               Inscrito
@@ -57,6 +59,7 @@ export default function Meetup({ data, onSubscription }) {
 }
 
 Meetup.propTypes = {
+  loading: PropTypes.bool.isRequired,
   data: PropTypes.shape({
     date: PropTypes.string,
     title: PropTypes.string,
