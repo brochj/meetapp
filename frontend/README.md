@@ -1,66 +1,104 @@
-# Desafio 09. Front-end do Meetapp
 
-## Conteúdo
-- [Desafio 09. Front-end do Meetapp](#desafio-09-front-end-do-meetapp)
-  - [Conteúdo](#conte%c3%bado)
-  - [Telas](#telas)
-    - [Autenticação](#autentica%c3%a7%c3%a3o)
-    - [Cadastro](#cadastro)
-    - [Dashboard](#dashboard)
-    - [Detalhes](#detalhes)
-    - [Novo/editar](#novoeditar)
-    - [Perfil](#perfil)
+- [Como utilizar](#como-utilizar)
+  - [API](#api)
+    - [Configurar o .env](#configurar-o-env)
+    - [Entrar na pasta da API](#entrar-na-pasta-da-api)
+    - [Instalar as dependências](#instalar-as-depend%c3%aancias)
+    - [Criar os bancos de dados](#criar-os-bancos-de-dados)
+    - [Migrations e Seeds](#migrations-e-seeds)
+    - [Executar a API](#executar-a-api)
+  - [Frontend](#frontend)
+    - [Instalar as dependências](#instalar-as-depend%c3%aancias-1)
+    - [Executar](#executar)
+  - [Mobile](#mobile)
+    - [Instalar as dependências](#instalar-as-depend%c3%aancias-2)
+    - [Executar](#executar-1)
+# Como utilizar
 
-Nesse desafio você irá construir o front-end com ReactJS do Meetapp que utilizará a API que você desenvolveu durante os desafios do segundo e terceiro módulo de Node.js.
+```bash
+git clone https://github.com/brochj/meetapp
+```
+## API
 
-- [x] Crie uma aplicação do zero utilizando create-react-app e configure as ferramentas de padrões de código, Reactotron, Redux e Redux Saga.
+###  Configurar o .env
 
-Essa aplicação será utilizada por organizadores de meetups e não contará com funcionalidades de inscrição.
+### Entrar na pasta da API
+```bash
+cd meetapp/backend
+```
 
-Essa aplicação faz parte do desafio final do bootcamp utilizado para finalização e certificação.
+### Instalar as dependências
+```bash
+yarn
+```
 
-## Telas
+### Criar os bancos de dados
 
-### Autenticação
-- [x] O usuário deve poder se autenticar utilizando e-mail e senha.
-![signin](src/assets/README/signin.png)
+```bash
+docker run --name meetappDB -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=meetapp -p 5432:5432 -d postgres
+```
 
-### Cadastro
+```bash
+docker run --name mongomeetapp -p 27017:27017 -d -t mongo
 
-- [x] O usuário deve poder se cadastrar com nome, e-mail e senha.
-![signup](src/assets/README/signup.png)
+```
 
-### Dashboard
+```bash
+docker run --name redismeetapp -p 6379:6379 -d -t redis:alpine
 
-- [x] O usuário deve poder listar os meetups que organiza e clicar para ver detalhes de um meetup.
+```
 
-- [x] Nessa tela o usuário pode navegar para a página de criação de meetup.
-![dash](src/assets/README/dash.png)
+### Migrations e Seeds
+irá executar as migrations e depois as seeds.
 
-### Detalhes
+```bash
+yarn seed
+```
 
-- [x] O usuário deve poder visualizar detalhes de um meetup previamente cadastrado.
+### Executar a API
 
-- [x] Nessa tela o usuário pode editar os dados de um meetup ou até cancelar um meetup.
+```bash
+yarn dev
+```
 
-![details](src/assets/README/details.png)
+## Frontend
 
-![delete](src/assets/README/delete.png)
+```bash
+cd meetapp/frontend
+```
 
-### Novo/editar
+### Instalar as dependências
 
-- [x] O usuário deve poder cadastrar ou editar informações de meetups que organiza.
+```bash
+yarn
+```
 
-- [x] Exiba a preview de imagem de banner do meetup quando o usuário selecionar uma imagem.
+### Executar
 
-- [x] Utilize validação nos campos.
+```bash
+yarn start
+```
 
-![new](src/assets/README/new.png)
-![edit](src/assets/README/edit.png)
-### Perfil
+## Mobile
+> OBS: foi testado apenas no **android** (8.1) utilizando o modo de debug por USB.
+```bash
+cd meetapp/mobile
+```
 
-- [x] O usuário deve poder editar suas informações de cadastro.
+### Instalar as dependências
 
-- [x] Utilize validação nos campos.
+```bash
+yarn
+```
 
-![profile](src/assets/README/profile.png)
+### Executar
+
+
+
+```bash
+yarn start
+```
+
+```bash
+react-native run-android
+```

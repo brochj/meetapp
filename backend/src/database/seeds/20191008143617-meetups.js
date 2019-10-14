@@ -18,9 +18,6 @@ for (let i = 1; i <= 1500; i += 1) {
 module.exports = {
   up: async queryInterface => {
     await queryInterface.bulkInsert('meetups', meetups, {});
-    await queryInterface.sequelize.query(
-      `ALTER SEQUENCE "meetapps_id_seq" RESTART WITH ${meetups.length + 1}`
-    );
   },
 
   down: queryInterface => queryInterface.bulkDelete('meetups', null, {}),
