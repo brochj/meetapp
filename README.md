@@ -1,7 +1,5 @@
-
 - [Como utilizar](#como-utilizar)
   - [API](#api)
-    - [Configurar o .env](#configurar-o-env)
     - [Entrar na pasta da API](#entrar-na-pasta-da-api)
     - [Instalar as dependências](#instalar-as-depend%c3%aancias)
     - [Criar os bancos de dados](#criar-os-bancos-de-dados)
@@ -14,21 +12,23 @@
     - [Instalar as dependências](#instalar-as-depend%c3%aancias-2)
     - [Configurar](#configurar)
     - [Executar](#executar-1)
+
 # Como utilizar
 
 ```bash
 git clone https://github.com/brochj/meetapp
 ```
+
 ## API
 
-###  Configurar o .env
-
 ### Entrar na pasta da API
+
 ```bash
 cd meetapp/backend
 ```
 
 ### Instalar as dependências
+
 ```bash
 yarn
 ```
@@ -50,6 +50,7 @@ docker run --name redismeetapp -p 6379:6379 -d -t redis:alpine
 ```
 
 ### Migrations e Seeds
+
 irá executar as migrations e depois as seeds.
 
 ```bash
@@ -81,7 +82,9 @@ yarn start
 ```
 
 ## Mobile
+
 > OBS: foi testado apenas no **android** (8.1) utilizando o modo de debug por USB.
+
 ```bash
 cd meetapp/mobile
 ```
@@ -94,20 +97,21 @@ yarn
 
 ### Configurar
 
-No arquivo `src/config/appConfig.js`
+O arquivo `src/config/appConfig.js` está configurado para executar pelo USB.
 
 ```js
-export const serverIP = '192.168.16.101'; // default 'localhost'
-export const serverPort = '3333';
+export const serverIP = "192.168.16.101"; // default 'localhost'
+export const serverPort = "3333";
 
 const appConfig = {
   reactotronHost: serverIP, // configure({ host: appConfig.reactotronHost })
   apiBaseURL: `http://${serverIP}:${serverPort}`, // axios
-  imagesHost: serverIP, // default 'localhost'
+  imagesHost: serverIP // default 'localhost'
 };
 
 export default appConfig;
 ```
+
 - `serverIP` é o IP da API, se estiver utilizando um debug por USB colocar o IP da máquina
 - `imagesHost` host da url das imagens, deve ser o IP da API. (Não precisa alterar)
 
