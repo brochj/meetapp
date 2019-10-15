@@ -11,9 +11,9 @@ import { Container, Form, FormInput, SubmitButton } from './styles';
 export default function SignUp({ navigation }) {
   const dispatch = useDispatch();
 
-  const [name, setName] = useState('Oscar Broch');
-  const [email, setEmail] = useState('brochj@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const loading = useSelector(state => state.auth.loading);
 

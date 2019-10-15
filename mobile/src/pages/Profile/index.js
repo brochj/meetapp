@@ -8,8 +8,6 @@ import { signOut } from '~/store/modules/auth/actions';
 import Background from '~/components/Background';
 
 import {
-  Container,
-  Title,
   Form,
   SubmitButton,
   Separator,
@@ -57,10 +55,6 @@ export default function Profile() {
 
   return (
     <Background>
-      <Container>
-        <Title>Meu Perfil</Title>
-      </Container>
-
       <Form>
         <FormInput
           icon="person-outline"
