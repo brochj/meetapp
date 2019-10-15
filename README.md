@@ -1,78 +1,122 @@
-# Desafio 02. Iniciando aplicação
-> [Ver texto original em bootcamp-gostack-desafio-02](https://github.com/Rocketseat/bootcamp-gostack-desafio-02/blob/master/README.md)
 
+- [Como utilizar](#como-utilizar)
+  - [API](#api)
+    - [Configurar o .env](#configurar-o-env)
+    - [Entrar na pasta da API](#entrar-na-pasta-da-api)
+    - [Instalar as dependências](#instalar-as-depend%c3%aancias)
+    - [Criar os bancos de dados](#criar-os-bancos-de-dados)
+    - [Migrations e Seeds](#migrations-e-seeds)
+    - [Executar a API](#executar-a-api)
+  - [Frontend](#frontend)
+    - [Instalar as dependências](#instalar-as-depend%c3%aancias-1)
+    - [Executar](#executar)
+  - [Mobile](#mobile)
+    - [Instalar as dependências](#instalar-as-depend%c3%aancias-2)
+    - [Configurar](#configurar)
+    - [Executar](#executar-1)
+# Como utilizar
 
-Crie uma aplicação do zero utilizando Express.
-
-Nessa aplicação configure as seguintes ferramentas:
-
-- [x] Sucrase + Nodemon;
-- [x] ESLint + Prettier + EditorConfig;
-- [x] Sequelize (Utilize PostgresSQL ou MySQL);
-#### Autenticação
-  - [x] Permita que um usuário se autentique em sua aplicação utilizando e-mail e senha.
-  - [x] A autenticação deve ser feita utilizando JWT.
-  - [x] Realize a validação dos dados de entrada;
-#### Cadastro e atualização de usuários
-  - [x] Permita que novos usuários se cadastrem em sua aplicação utilizando nome, e-mail e senha.
-  - [x] Para atualizar a senha, o usuário deve também enviar um campo de confirmação com a mesma senha.
-  - [x] Criptografe a senha do usuário para segurança.
-  - [x] Realize a validação dos dados de entrada
-
-
-# Desafio 03. Continuando a aplicação
-
-> [Ver texto original em bootcamp-gostack-desafio-03](https://github.com/Rocketseat/bootcamp-gostack-desafio-03/blob/master/README.md)
-
-
-
-## Funcionalidades
-
-#### Gerenciamento de arquivos
-
-- [x] Crie uma rota para upload de arquivos que cadastra em uma tabela o caminho e nome do arquivo e retorna todos dados do arquivo cadastrado.
-
-#### Gerenciamento de meetups
-
-- [x] O usuário pode cadastrar meetups na plataforma com título do meetup, descrição, localização, data e hora e imagem (banner). Todos campos são obrigatórios. Adicione também um campo user_id que armazena o ID do usuário que organiza o evento.
-
-- [x] Não deve ser possível cadastrar meetups com datas que já passaram.
-
-- [x] O usuário também deve poder editar todos dados de meetups que ainda não aconteceram e que ele é organizador.
-
-- [x] Crie uma rota para listar os meetups que são organizados pelo usuário logado.
-
-- [x] O usuário deve poder cancelar meetups organizados por ele e que ainda não aconteceram. O cancelamento deve deletar o meetup da base de dados.
-
-#### Inscrição no meetup
-
-- [x] O usuário deve poder se inscrever em meetups que não organiza.
-
-- [x] O usuário não pode se inscrever em meetups que já aconteceram.
-
-- [x] O usuário não pode se inscrever no mesmo meetup duas vezes.
-
-- [x] O usuário não pode se inscrever em dois meetups que acontecem no mesmo horário.
-
-- [x] Sempre que um usuário se inscrever no meetup, envie um e-mail ao organizador contendo os dados relacionados ao usuário inscrito. O template do e-mail fica por sua conta :)
-
-#### Listagem de meetups
-
-- [x] Crie uma rota para listar os meetups com filtro por data (não por hora), os resultados dessa listagem devem vir paginados em 10 itens por página.
-
-> Abaixo tem um exemplo de chamada para a rota de listagem dos meetups:
-
+```bash
+git clone https://github.com/brochj/meetapp
 ```
-http://localhost:3333/meetups?date=2019-07-01&page=2
+## API
+
+###  Configurar o .env
+
+### Entrar na pasta da API
+```bash
+cd meetapp/backend
 ```
 
-> Nesse exemplo, listaremos a página 2 dos meetups que acontecerão no dia 01 de Julho.
+### Instalar as dependências
+```bash
+yarn
+```
 
-- [x] Nessa listagem retorne também os dados do organizador.
+### Criar os bancos de dados
 
-### Listagem de inscrições
+```bash
+docker run --name meetappDB -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=meetapp -p 5432:5432 -d postgres
+```
 
-- [x] Crie uma rota para listar os meetups em que o usuário logado está inscrito.
+```bash
+docker run --name mongomeetapp -p 27017:27017 -d -t mongo
 
-- [x] Liste apenas meetups que ainda não passaram e ordene meetups mais próximos como primeiros da lista.
+```
 
+```bash
+docker run --name redismeetapp -p 6379:6379 -d -t redis:alpine
+
+```
+
+### Migrations e Seeds
+irá executar as migrations e depois as seeds.
+
+```bash
+yarn seed
+```
+
+### Executar a API
+
+```bash
+yarn dev
+```
+
+## Frontend
+
+```bash
+cd meetapp/frontend
+```
+
+### Instalar as dependências
+
+```bash
+yarn
+```
+
+### Executar
+
+```bash
+yarn start
+```
+
+## Mobile
+> OBS: foi testado apenas no **android** (8.1) utilizando o modo de debug por USB.
+```bash
+cd meetapp/mobile
+```
+
+### Instalar as dependências
+
+```bash
+yarn
+```
+
+### Configurar
+
+No arquivo `src/config/appConfig.js`
+
+```js
+export const serverIP = '192.168.16.101'; // default 'localhost'
+export const serverPort = '3333';
+
+const appConfig = {
+  reactotronHost: serverIP, // configure({ host: appConfig.reactotronHost })
+  apiBaseURL: `http://${serverIP}:${serverPort}`, // axios
+  imagesHost: serverIP, // default 'localhost'
+};
+
+export default appConfig;
+```
+- `serverIP` é o IP da API, se estiver utilizando um debug por USB colocar o IP da máquina
+- `imagesHost` host da url das imagens, deve ser o IP da API. (Não precisa alterar)
+
+### Executar
+
+```bash
+yarn start
+```
+
+```bash
+react-native run-android
+```
